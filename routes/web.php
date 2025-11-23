@@ -1,12 +1,92 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TicketController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\TicketController as AdminTicketController;
 use Illuminate\Support\Facades\Auth;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+/*
+|--------------------------------------------------------------------------
+| Authentication Routes
+|--------------------------------------------------------------------------
+*/
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+/*
+|--------------------------------------------------------------------------
+| Landing Page
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/', function () {
+    return auth()->guest()
+        ? view('welcome')
+        : redirect()->route('tickets.index');
+});
+
+/*
+|--------------------------------------------------------------------------
+| User Routes (Authenticated Only)
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth'])->group(function () {
+
+    // User Ticketing
+    Route::resource('tickets', TicketController::class)
+        ->only(['index', 'create', 'store', 'show']);
+
+    // Comment on ticket
+    Route::post(
+        'tickets/{ticket}/comments',
+        [CommentController::class, 'store']
+    )
+        ->name('tickets.comments.store');
+
+    // User Profile
+    Route::get(
+        'profile',
+        [AdminUserController::class, 'profile']
+    )
+        ->name('profile.show');
+
+    Route::put(
+        'profile',
+        [AdminUserController::class, 'updateProfile']
+    )
+        ->name('profile.update');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Admin Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['auth', 'role:admin'])
+    ->group(function () {
+
+        // Admin Ticket Management
+        Route::resource('tickets', AdminTicketController::class)
+            ->except(['show', 'create', 'store']);
+
+        // Admin Manage Users
+        Route::resource('users', AdminUserController::class);
+
+        // Admin Manage Roles
+        Route::resource('roles', RoleController::class);
+
+        // Admin Manage Categories
+        Route::resource('categories', CategoryController::class);
+
+        // Admin Manage Departments
+        Route::resource('departments', DepartmentController::class);
+    });
