@@ -34,20 +34,21 @@ class User extends Authenticatable
         return $this->hasMany(Ticket::class);
     }
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password'
-    ];
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    public function assignedTickets()
+    {
+        return $this->hasMany(Ticket::class, 'assigned_to');
+    }
+
+    public function isAdmin()
+    {
+        return $this->role && $this->role->role === 'admin';
+    }
+
     protected function casts(): array
     {
         return [

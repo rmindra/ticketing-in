@@ -18,7 +18,7 @@ class Ticket extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function technician()
+    public function assignedTo()
     {
         return $this->belongsTo(User::class, 'assigned_to');
     }
