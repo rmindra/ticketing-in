@@ -53,6 +53,7 @@ Route::middleware(['auth'])->group(function () {
 
     // User Profile (non-admin)
     Route::get('profile', [UserController::class, 'showProfile'])->name('profile.show');
+    Route::get('profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
     Route::put('profile', [UserController::class, 'updateProfile'])->name('profile.update');
 });
 
@@ -67,9 +68,15 @@ Route::prefix('admin')
     ->middleware(['auth', 'role:admin'])
     ->group(function () {
 
+        // Admin Dashboard
+        Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+
         // Admin Ticket Management
         Route::resource('tickets', AdminTicketController::class)
             ->except(['show', 'create', 'store']);
+
+        // Claim a ticket (admin picks it up)
+        Route::post('tickets/{ticket}/claim', [\App\Http\Controllers\Admin\AdminTicketController::class, 'claim'])->name('tickets.claim');
 
         // Admin Manage Users
         Route::resource('users', AdminUserController::class);

@@ -18,6 +18,13 @@
     <td>
         <a href="{{ route('admin.tickets.edit',$t) }}" class="btn btn-sm btn-warning">Edit</a>
         <form action="{{ route('admin.tickets.destroy',$t) }}" method="post" style="display:inline">@csrf @method('DELETE')<button class="btn btn-sm btn-danger">Del</button></form>
+
+        @if(!$t->assigned_to || $t->assigned_to != auth()->id())
+            <form action="{{ route('admin.tickets.claim', $t) }}" method="post" style="display:inline">
+                @csrf
+                <button class="btn btn-sm btn-success">Claim</button>
+            </form>
+        @endif
     </td>
 </tr>
 @endforeach

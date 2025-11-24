@@ -46,7 +46,7 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        return $this->role === 'admin';
+        return $this->role && $this->role->role === 'admin';
     }
 
     protected function casts(): array

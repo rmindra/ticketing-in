@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Role;
 
 class RoleController extends Controller
 {
@@ -11,7 +12,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
+        $roles = Role::paginate(15);
+        return view('admin.roles.index', compact('roles'));
     }
 
     /**
@@ -19,7 +21,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.roles.create');
     }
 
     /**
@@ -27,7 +29,13 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'role' => 'required|string|max:255|unique:roles,role',
+            'description' => 'nullable|string',
+        ]);
+
+        Role::create($data);
+        return redirect()->route('admin.roles.index')->with('success', 'Role created');
     }
 
     /**
@@ -35,7 +43,8 @@ class RoleController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $role = Role::findOrFail($id);
+        return view('admin.roles.show', compact('role'));
     }
 
     /**
@@ -43,7 +52,8 @@ class RoleController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $role = Role::findOrFail($id);
+        return view('admin.roles.edit', compact('role'));
     }
 
     /**
@@ -51,7 +61,14 @@ class RoleController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $role = Role::findOrFail($id);
+        $data = $request->validate([
+            'role' => 'required|string|max:255|unique:roles,role,' . $role->id,
+            'description' => 'nullable|string',
+        ]);
+
+        $role->update($data);
+        return redirect()->route('admin.roles.index')->with('success', 'Role updated');
     }
 
     /**
@@ -59,6 +76,8 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $role = Role::findOrFail($id);
+        $role->delete();
+        return back()->with('success', 'Role deleted');
     }
 }

@@ -33,7 +33,7 @@ class LoginController extends Controller
     protected function authenticated($request, $user)
     {
         if ($user->role && $user->role->role === 'admin') {
-            return redirect()->route('admin.users.index');
+            return redirect()->route('admin.dashboard');
         }
 
         return redirect()->intended($this->redirectTo);
