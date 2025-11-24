@@ -33,6 +33,16 @@ class InitialSeeder extends Seeder
             ]
         );
 
+        User::firstOrCreate(
+            ['email' => 'user@test.com'],
+            [
+                'name' => 'User',
+                'password' => Hash::make('password'),
+                'role_id' => $rUser->id,
+                'department_id' => $hr->id
+            ]
+        );
+
         Category::firstOrCreate(['name' => 'Printer']);
         Category::firstOrCreate(['name' => 'Network']);
     }

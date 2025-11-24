@@ -10,7 +10,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class AdminUserController extends Controller
 {
     public function index()
     {
@@ -62,26 +62,5 @@ class UserController extends Controller
     {
         $user->delete();
         return back()->with('success', 'User deleted');
-    }
-
-    /* Profile user biasa */
-
-    public function profile()
-    {
-        return view('profile.index', [
-            'user' => auth()->user()
-        ]);
-    }
-
-    public function updateProfile(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255'
-        ]);
-
-        $user = auth()->user();
-        $user->update($request->only('name'));
-
-        return back()->with('success', 'Profile updated');
     }
 }

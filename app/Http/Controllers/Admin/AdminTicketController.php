@@ -8,7 +8,7 @@ use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Category;
 
-class TicketController extends Controller
+class AdminTicketController extends Controller
 {
     public function index()
     {

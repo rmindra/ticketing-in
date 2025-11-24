@@ -1,13 +1,34 @@
-<div class="list-group">
-    <a href="{{ route('tickets.index') }}" class="list-group-item list-group-item-action">My Tickets</a>
-    @can('viewAny', App\Models\Ticket::class) {{-- optional if you later add policies --}}
-    @endcan
+@php
+    $menu = config('sidebar.menu', []);
+    $canCheck = function ($can) {
+        if (!$can) return true;
+        if (str_starts_with($can, 'role:')) {
+            $role = substr($can, 5);
+            return auth()->check() && optional(auth()->user()->role)->role === $role;
+        }
+        return auth()->check() ? auth()->user()->can($can) : false;
+    };
+@endphp
 
-    @if(auth()->user()->isAdmin())
-        <a href="{{ route('admin.tickets.index') }}" class="list-group-item list-group-item-action">All Tickets (Admin)</a>
-        <a href="{{ route('admin.users.index') }}" class="list-group-item list-group-item-action">Manage Users</a>
-        <a href="{{ route('admin.roles.index') }}" class="list-group-item list-group-item-action">Manage Roles</a>
-        <a href="{{ route('admin.categories.index') }}" class="list-group-item list-group-item-action">Categories</a>
-        <a href="{{ route('admin.departments.index') }}" class="list-group-item list-group-item-action">Departments</a>
-    @endif
-</div>
+<nav class="pt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" role="menu">
+        @foreach($menu as $item)
+            @if(isset($item['header']))
+                <li class="nav-header px-3 mt-2 text-muted">{{ $item['header'] }}</li>
+                @continue
+            @endif
+
+            @php $show = $canCheck($item['can'] ?? null); @endphp
+            @if(!$show) @continue @endif
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{ $item['route'] ? route($item['route']) : '#' }}">
+                    @if(!empty($item['icon']))
+                        <i class="nav-icon {{ $item['icon'] }}"></i>
+                    @endif
+                    <p>{{ $item['text'] }}</p>
+                </a>
+            </li>
+        @endforeach
+    </ul>
+</nav>

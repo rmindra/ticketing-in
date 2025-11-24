@@ -6,8 +6,9 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\Admin\UserController as AdminUserController;
-use App\Http\Controllers\Admin\TicketController as AdminTicketController;
+use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AdminTicketController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -18,16 +19,17 @@ use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
 
-/*
-|--------------------------------------------------------------------------
-| Landing Page
-|--------------------------------------------------------------------------
-*/
+use App\Http\Controllers\HomeController;
+
+Route::get('/home', [HomeController::class, 'index'])
+    ->name('home')
+    ->middleware('auth');
+
 
 Route::get('/', function () {
     return auth()->guest()
         ? view('welcome')
-        : redirect()->route('tickets.index');
+        : redirect()->route('home');
 });
 
 /*
@@ -49,18 +51,9 @@ Route::middleware(['auth'])->group(function () {
     )
         ->name('tickets.comments.store');
 
-    // User Profile
-    Route::get(
-        'profile',
-        [AdminUserController::class, 'profile']
-    )
-        ->name('profile.show');
-
-    Route::put(
-        'profile',
-        [AdminUserController::class, 'updateProfile']
-    )
-        ->name('profile.update');
+    // User Profile (non-admin)
+    Route::get('profile', [UserController::class, 'showProfile'])->name('profile.show');
+    Route::put('profile', [UserController::class, 'updateProfile'])->name('profile.update');
 });
 
 /*
