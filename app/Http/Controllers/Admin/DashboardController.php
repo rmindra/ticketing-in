@@ -92,7 +92,17 @@ class DashboardController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        if (!$user->isAdmin()) {
+        // Robust admin check: allow based on isAdmin(), role_id fallback (1),
+        // or inspecting role->role / role->name to avoid false negatives.
+        $isAdmin = false;
+        try {
+            $isAdmin = $user->isAdmin() || $user->role_id === 1 || (($user->role->role ?? null) === 'admin') || (($user->role->name ?? null) === 'admin');
+        } catch (\Throwable $e) {
+            Log::warning('Error while checking admin role in resolveTicket', ['user_id' => $user->id ?? null, 'error' => $e->getMessage()]);
+        }
+
+        if (! $isAdmin) {
+            Log::warning('Unauthorized resolveTicket attempt', ['user_id' => $user->id ?? null, 'ticket_id' => $ticket->id]);
             abort(403);
         }
 

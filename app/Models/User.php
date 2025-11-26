@@ -14,7 +14,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role_id'
+        'role_id',
+        'department_id',
     ];
 
     protected $hidden = [
@@ -39,7 +40,13 @@ class User extends Authenticatable
     // Method untuk cek apakah user adalah admin
     public function isAdmin()
     {
-        return $this->role && $this->role->name === 'admin';
+        // The roles table stores the role in the 'role' column (enum).
+        // Some code may expect a 'name' attribute; accept either to be safe.
+        if (! $this->role) {
+            return false;
+        }
+
+        return ($this->role->role ?? null) === 'admin' || ($this->role->name ?? null) === 'admin';
     }
 
     // Alternatif: cek berdasarkan role_id (jika role_id 1 = admin)
@@ -64,5 +71,10 @@ class User extends Authenticatable
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
     }
 }

@@ -1,11 +1,13 @@
 @extends('layouts.app')
-@section('page_title','Categories')
+@section('page_title','Manage Categories')
+
 @section('main')
 <div class="d-flex justify-content-between mb-2">
     <h5>Categories</h5>
-    <a href="{{ route('admin.categories.create') }}" class="btn btn-primary btn-sm">Create</a>
+    <a href="{{ route('admin.categories.create') }}" class="btn btn-primary btn-sm">Create Category</a>
 </div>
-<table class="table table-striped">
+
+<table id="categories-table" class="table table-striped table-bordered">
     <thead><tr><th>ID</th><th>Name</th><th>Description</th><th>Action</th></tr></thead>
     <tbody>
     @foreach($categories as $c)
@@ -14,12 +16,22 @@
             <td>{{ $c->name }}</td>
             <td>{{ $c->description }}</td>
             <td>
-                <a class="btn btn-sm btn-warning" href="{{ route('admin.categories.edit',$c) }}">Edit</a>
-                <form action="{{ route('admin.categories.destroy',$c) }}" method="post" style="display:inline">@csrf @method('DELETE')<button class="btn btn-sm btn-danger">Del</button></form>
+                <a href="{{ route('admin.categories.edit',$c) }}" class="btn btn-sm btn-warning">Edit</a>
+                <form action="{{ route('admin.categories.destroy',$c) }}" method="post" style="display:inline" onsubmit="return confirm('Delete category?')">
+                    @csrf @method('DELETE')
+                    <button class="btn btn-sm btn-danger">Del</button>
+                </form>
             </td>
         </tr>
     @endforeach
     </tbody>
 </table>
+
 {{ $categories->links() }}
+
+@push('scripts')
+<script>
+$(document).ready(function(){ $('#categories-table').DataTable({ "paging": false }); });
+</script>
+@endpush
 @endsection

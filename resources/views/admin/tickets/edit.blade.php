@@ -130,7 +130,7 @@
                         </div>
 
                         <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg">
+                            <button type="submit" class="btn btn-primary btn-md">
                                 <i class="fas fa-save me-2"></i> Update Ticket
                             </button>
                         </div>

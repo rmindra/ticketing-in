@@ -14,8 +14,28 @@ class AdminTicketController extends Controller
 {
     public function index()
     {
-        $tickets = Ticket::with('user', 'assignedTo', 'category')->latest()->paginate(15);
-        return view('admin.tickets.index', compact('tickets'));
+        $status = request()->query('status');
+
+        // Sorting
+        $sort = request()->query('sort', 'created_at');
+        $dir = strtolower(request()->query('dir', 'desc')) === 'asc' ? 'asc' : 'desc';
+
+        // Whitelist sortable columns to prevent SQL injection
+        $allowedSorts = ['created_at', 'title', 'priority', 'status'];
+        if (! in_array($sort, $allowedSorts)) {
+            $sort = 'created_at';
+        }
+
+        $query = Ticket::with('user', 'assignedTo', 'category')
+            ->orderBy($sort, $dir);
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        $tickets = $query->paginate(15)->withQueryString();
+
+        return view('admin.tickets.index', compact('tickets', 'status', 'sort', 'dir'));
     }
 
     public function edit(Ticket $ticket)
@@ -25,7 +45,8 @@ class AdminTicketController extends Controller
         // PERBAIKAN: Gunakan Auth::id() untuk menghindari error Intelephense
         $users = User::with('role')
             ->whereHas('role', function ($query) {
-                $query->where('name', 'admin');
+                // roles table stores the role in the 'role' column (enum 'admin'|'user')
+                $query->where('role', 'admin');
             })
             ->get();
 
@@ -54,18 +75,16 @@ class AdminTicketController extends Controller
         // Debug: lihat data yang divalidasi
         Log::info('Validated data:', $validated);
 
-        // Jika assigned_to dikosongkan, set ke null
+        // Jika admin memilih status 'Open', pastikan ticket tidak assigned
+        if (($validated['status'] ?? '') === 'Open') {
+            $validated['assigned_to'] = null;
+        }
+
+        // Jika assigned_to dikosongkan, set ke null dan jangan biarkan status tetap In Progress
         if (empty($validated['assigned_to'])) {
             $validated['assigned_to'] = null;
-
-            // Jika assigned_to dikosongkan dan status In Progress, ubah ke Open
             if ($validated['status'] === 'In Progress') {
                 $validated['status'] = 'Open';
-            }
-        } else {
-            // Jika assigned_to diisi dan status Open, ubah ke In Progress
-            if ($validated['status'] === 'Open') {
-                $validated['status'] = 'In Progress';
             }
         }
 

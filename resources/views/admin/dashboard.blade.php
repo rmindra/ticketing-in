@@ -116,7 +116,7 @@
                     <div class="ticket-item mb-3 p-3 border rounded">
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="flex-grow-1">
-                                <h6 class="mb-1">{{ $ticket->title }}</h6>
+                                <h6 class="mb-1"><a href="{{ route('tickets.show', $ticket) }}">{{ $ticket->title }}</a></h6>
                                 <p class="mb-1 text-muted small">
                                     <i class="fas fa-user me-1"></i>By: {{ $ticket->user->name }}
                                 </p>
@@ -133,7 +133,6 @@
                                 </small>
                             </div>
                             <div class="ms-3">
-                                <!-- ✅ TEMPORARY FIX: Gunakan URL langsung -->
                                 <form action="/admin/tickets/{{ $ticket->id }}/claim" method="POST" class="d-inline">
                                     @csrf
                                     <button type="submit" class="btn btn-success btn-sm">
@@ -167,7 +166,7 @@
                     <div class="ticket-item mb-3 p-3 border rounded">
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="flex-grow-1">
-                                <h6 class="mb-1">{{ $ticket->title }}</h6>
+                                <h6 class="mb-1"><a href="{{ route('tickets.show', $ticket) }}">{{ $ticket->title }}</a></h6>
                                 <p class="mb-1 text-muted small">
                                     <i class="fas fa-user me-1"></i>By: {{ $ticket->user->name }}
                                 </p>
@@ -175,13 +174,15 @@
                                     <span class="badge bg-{{ $ticket->priority === 'Urgent' ? 'danger' : ($ticket->priority === 'High' ? 'warning' : 'secondary') }}">
                                         <i class="fas fa-flag me-1"></i>{{ $ticket->priority }}
                                     </span>
+                                    <span class="badge bg-light text-dark">
+                                        <i class="fas fa-tag me-1"></i>{{ $ticket->category->name ?? 'N/A' }}
+                                    </span>
                                 </p>
                                 <small class="text-muted">
                                     <i class="fas fa-calendar me-1"></i>Diterima: {{ $ticket->updated_at->format('M d, Y H:i') }}
                                 </small>
                             </div>
                             <div class="ms-3">
-                                <!-- ✅ TEMPORARY FIX: Gunakan URL langsung -->
                                 <form action="/admin/tickets/{{ $ticket->id }}/resolve" method="POST" class="d-inline">
                                     @csrf
                                     <button type="submit" class="btn btn-success btn-sm">

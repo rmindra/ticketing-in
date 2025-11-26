@@ -49,6 +49,45 @@ class CommentController extends Controller
         return redirect()->back()->with('success', 'Komentar berhasil ditambahkan.');
     }
 
+    /**
+     * Update an existing comment.
+     */
+    public function update(Request $request, Ticket $ticket, Comment $comment)
+    {
+        $request->validate([
+            'content' => 'required|string|min:1'
+        ]);
+
+        $user = Auth::user();
+
+        // Only admin or owner of comment can update
+        if (!($user->isAdmin() || $comment->user_id === $user->id)) {
+            abort(403);
+        }
+
+        $comment->content = $request->input('content');
+        // don't change is_admin/is_system here
+        $comment->save();
+
+        return redirect()->back()->with('success', 'Komentar diperbarui.');
+    }
+
+    /**
+     * Delete a comment.
+     */
+    public function destroy(Ticket $ticket, Comment $comment)
+    {
+        $user = Auth::user();
+
+        // Only admin or owner can delete
+        if (!($user->isAdmin() || $comment->user_id === $user->id)) {
+            abort(403);
+        }
+
+        $comment->delete();
+        return redirect()->back()->with('success', 'Komentar dihapus.');
+    }
+
     // Method untuk user konfirmasi resolusi
     public function confirmResolution(Ticket $ticket)
     {

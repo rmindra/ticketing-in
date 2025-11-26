@@ -9,11 +9,13 @@ return new class extends Migration
     public function up()
     {
         Schema::table('tickets', function (Blueprint $table) {
-            $table->foreignId('assigned_to')
-                ->after('user_id')
-                ->nullable()
-                ->constrained('users')
-                ->onDelete('set null');
+            if (!Schema::hasColumn('tickets', 'assigned_to')) {
+                $table->foreignId('assigned_to')
+                    ->after('user_id')
+                    ->nullable()
+                    ->constrained('users')
+                    ->onDelete('set null');
+            }
         });
     }
 

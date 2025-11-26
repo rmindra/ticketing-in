@@ -20,6 +20,8 @@ return [
             'text' => 'Profile',
             'route' => 'profile.show',
             'icon' => 'fas fa-user',
+            'can' => 'role:user',
+            'can' => 'role:admin'
         ],
         [
             'text' => 'Users',

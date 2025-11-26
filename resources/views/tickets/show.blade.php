@@ -70,7 +70,7 @@
                 <div class="card-body">
                     {{-- List komentar --}}
                     @foreach($ticket->comments as $comment)
-                        <div class="d-flex mb-4 {{ $comment->isFromAdmin() ? 'bg-light-primary' : 'bg-light' }} p-3 rounded">
+                        <div class="d-flex mb-4 {{ $comment->isFromAdmin() ? 'bg-light-primary' : 'bg-light' }} p-3 rounded comment-item" data-comment-id="{{ $comment->id }}">
                             <div class="flex-shrink-0">
                                 <div class="avatar avatar-sm rounded-circle bg-primary text-white">
                                     {{ substr($comment->user->name, 0, 1) }}
@@ -89,7 +89,30 @@
                                     </h6>
                                     <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
                                 </div>
-                                <p class="mb-0 mt-2">{!! $comment->getDisplayContent() !!}</p>
+                                <p class="mb-0 mt-2 comment-content">{!! $comment->getDisplayContent() !!}</p>
+
+                                @php $user = auth()->user(); @endphp
+                                @if($user && ($user->isAdmin() || $user->id === $comment->user_id))
+                                    <div class="mt-2">
+                                        <button class="btn btn-sm btn-outline-secondary btn-edit-comment" data-id="{{ $comment->id }}">Edit</button>
+                                        <form action="{{ route('tickets.comments.destroy', [$ticket, $comment]) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Hapus komentar ini?')">Delete</button>
+                                        </form>
+                                    </div>
+
+                                    {{-- Hidden edit form --}}
+                                    <form action="{{ route('tickets.comments.update', [$ticket, $comment]) }}" method="POST" class="mt-2 d-none edit-form" id="edit-form-{{ $comment->id }}">
+                                        @csrf
+                                        @method('PUT')
+                                        <textarea name="content" class="form-control" rows="3">{{ $comment->content }}</textarea>
+                                        <div class="mt-2">
+                                            <button class="btn btn-sm btn-primary">Save</button>
+                                            <button type="button" class="btn btn-sm btn-secondary btn-cancel-edit" data-id="{{ $comment->id }}">Cancel</button>
+                                        </div>
+                                    </form>
+                                @endif
                             </div>
                         </div>
                     @endforeach
@@ -189,3 +212,29 @@
 }
 </style>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.btn-edit-comment').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var id = this.getAttribute('data-id');
+            var form = document.getElementById('edit-form-' + id);
+            if (form) {
+                form.classList.remove('d-none');
+            }
+        });
+    });
+
+    document.querySelectorAll('.btn-cancel-edit').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var id = this.getAttribute('data-id');
+            var form = document.getElementById('edit-form-' + id);
+            if (form) {
+                form.classList.add('d-none');
+            }
+        });
+    });
+});
+</script>
+@endpush

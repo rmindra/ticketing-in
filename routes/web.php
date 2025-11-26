@@ -44,6 +44,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('tickets/{ticket}/comments', [CommentController::class, 'store'])
         ->name('tickets.comments.store');
+    Route::put('tickets/{ticket}/comments/{comment}', [CommentController::class, 'update'])
+        ->name('tickets.comments.update');
+    Route::delete('tickets/{ticket}/comments/{comment}', [CommentController::class, 'destroy'])
+        ->name('tickets.comments.destroy');
 
     Route::get('profile', [UserController::class, 'showProfile'])->name('profile.show');
     Route::get('profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');

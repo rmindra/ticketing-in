@@ -26,18 +26,25 @@
 
     <div class="card shadow">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary">All Tickets</h6>
-            <div>
-                <a href="{{ route('admin.tickets.index') }}?status=Open" class="btn btn-warning btn-sm">Open</a>
-                <a href="{{ route('admin.tickets.index') }}?status=In Progress" class="btn btn-info btn-sm">In Progress</a>
-                <a href="{{ route('admin.tickets.index') }}" class="btn btn-primary btn-sm">All</a>
+            <h6 class="m-0 font-weight-bold">All Tickets</h6>
+            <div class="d-flex align-items-center">
+                <div class="btn-group me-2">
+                    <div class="me-2">
+                        <a href="{{ route('admin.tickets.index', array_merge(request()->except('page'), ['status' => 'Open'])) }}" class="btn btn-warning btn-sm {{ ($status ?? '') === 'Open' ? 'active' : '' }}">Open</a>
+                        <a href="{{ route('admin.tickets.index', array_merge(request()->except('page'), ['status' => 'In Progress'])) }}" class="btn btn-info btn-sm {{ ($status ?? '') === 'In Progress' ? 'active' : '' }}">In Progress</a>
+                        <a href="{{ route('admin.tickets.index', array_merge(request()->except('page'), ['status' => 'Resolved'])) }}" class="btn btn-success btn-sm {{ ($status ?? '') === 'Resolved' ? 'active' : '' }}">Resolved</a>
+                        <a href="{{ route('admin.tickets.index', request()->except(['page','status'])) }}" class="btn btn-primary btn-sm {{ empty($status) ? 'active' : '' }}">All</a>
+                    </div>
+                </div>
             </div>
         </div>
+
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered">
+                <table id="tickets-table" class="table table-striped table-bordered">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Title</th>
                             <th>User</th>
                             <th>Status</th>
@@ -45,13 +52,14 @@
                             <th>Category</th>
                             <th>Assigned To</th>
                             <th>Created</th>
-                            <th>Actions</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($tickets as $ticket)
+                    @foreach($tickets as $ticket)
                         <tr>
-                            <td>{{ $ticket->title }}</td>
+                            <td>{{ $ticket->id }}</td>
+                            <td><a href="{{ route('tickets.show', $ticket) }}">{{ $ticket->title }}</a></td>
                             <td>{{ $ticket->user->name }}</td>
                             <td>
                                 <span class="badge bg-{{ $ticket->status === 'Open' ? 'warning' : ($ticket->status === 'In Progress' ? 'info' : 'success') }}">
@@ -83,16 +91,19 @@
                                 </form>
                             </td>
                         </tr>
-                        @endforeach
+                    @endforeach
                     </tbody>
                 </table>
             </div>
 
-            <!-- Pagination -->
-            <div class="d-flex justify-content-center">
-                {{ $tickets->links() }}
-            </div>
+            {{ $tickets->links() }}
         </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+$(document).ready(function(){ $('#tickets-table').DataTable({ "paging": false }); });
+</script>
+@endpush

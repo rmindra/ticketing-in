@@ -11,6 +11,7 @@ class Comment extends Model
 
     protected $fillable = [
         'content',
+        'message',
         'user_id',
         'ticket_id',
         'is_admin',
@@ -55,5 +56,21 @@ class Comment extends Model
             return '<em>' . $this->content . '</em>';
         }
         return $this->content;
+    }
+
+    /**
+     * Accessor for 'content' to read the underlying 'message' column.
+     */
+    public function getContentAttribute()
+    {
+        return $this->attributes['message'] ?? null;
+    }
+
+    /**
+     * Mutator for 'content' to write into the underlying 'message' column.
+     */
+    public function setContentAttribute($value)
+    {
+        $this->attributes['message'] = $value;
     }
 }
