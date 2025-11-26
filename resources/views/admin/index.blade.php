@@ -67,4 +67,19 @@
         </div>
     </div>
 </div>
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5>Quick Actions</h5>
+                <a href="{{ route('admin.tickets.index') }}?status=Open" class="btn btn-outline-primary">
+                    <i class="fas fa-clock"></i> View Open Tickets
+                </a>
+                <a href="{{ route('admin.users.create') }}" class="btn btn-outline-success">
+                    <i class="fas fa-user-plus"></i> Add New User
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
