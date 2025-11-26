@@ -63,11 +63,6 @@ class DashboardController extends Controller
             'user_id' => $user->id
         ]);
 
-        // Validasi: hanya admin yang bisa claim
-        //if (!$user->isAdmin()) {
-        //    return redirect()->back()->with('error', 'Unauthorized action.');
-        //}
-
         // Validasi: ticket tidak sudah diassign ke orang lain
         if ($ticket->assigned_to && $ticket->assigned_to !== $user->id) {
             return redirect()->back()->with('error', 'Ticket sudah diassign ke admin lain.');
@@ -92,8 +87,6 @@ class DashboardController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // Robust admin check: allow based on isAdmin(), role_id fallback (1),
-        // or inspecting role->role / role->name to avoid false negatives.
         $isAdmin = false;
         try {
             $isAdmin = $user->isAdmin() || $user->role_id === 1 || (($user->role->role ?? null) === 'admin') || (($user->role->name ?? null) === 'admin');

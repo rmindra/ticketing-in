@@ -42,7 +42,6 @@ class AdminTicketController extends Controller
     {
         $categories = Category::all();
 
-        // PERBAIKAN: Gunakan Auth::id() untuk menghindari error Intelephense
         $users = User::with('role')
             ->whereHas('role', function ($query) {
                 // roles table stores the role in the 'role' column (enum 'admin'|'user')
@@ -52,7 +51,7 @@ class AdminTicketController extends Controller
 
         // Jika tidak ada users, tambahkan current user sebagai option
         if ($users->isEmpty()) {
-            $users = User::where('id', Auth::id())->get(); // ✅ PERBAIKAN: Auth::id()
+            $users = User::where('id', Auth::id())->get(); 
         }
 
         return view('admin.tickets.edit', compact('ticket', 'categories', 'users'));
