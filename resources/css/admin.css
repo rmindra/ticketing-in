@@ -1,0 +1,82 @@
+/* === ADMIN SPECIFIC STYLES === */
+
+/* Stats Cards */
+.stats-card {
+    border-left: 4px solid;
+    transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-3px);
+}
+
+.stats-card-primary {
+    border-left-color: #667eea;
+}
+.stats-card-success {
+    border-left-color: #4cc9f0;
+}
+.stats-card-warning {
+    border-left-color: #f72585;
+}
+.stats-card-info {
+    border-left-color: #4895ef;
+}
+
+/* Gradient Backgrounds */
+.bg-gradient-primary {
+    background: var(--gradient-primary) !important;
+}
+.bg-gradient-success {
+    background: var(--gradient-success) !important;
+}
+.bg-gradient-warning {
+    background: var(--gradient-warning) !important;
+}
+.bg-gradient-info {
+    background: var(--gradient-primary) !important;
+}
+.bg-gradient-danger {
+    background: var(--gradient-danger) !important;
+}
+
+/* Quick Actions Grid */
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.quick-action-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.quick-action-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+}
+
+/* Status Indicators */
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
+.status-open {
+    background: #4cc9f0;
+}
+.status-progress {
+    background: #f72585;
+}
+.status-closed {
+    background: #667eea;
+}

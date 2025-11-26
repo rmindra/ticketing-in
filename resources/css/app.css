@@ -1,11 +1,188 @@
-@import 'tailwindcss';
+/* === VARIABLES & THEME === */
+:root {
+    /* Color Palette - Cerah & Modern */
+    --primary: #667eea;
+    --secondary: #764ba2;
+    --success: #4cc9f0;
+    --info: #4895ef;
+    --warning: #f72585;
+    --danger: #e63946;
+    --light: #f8f9fa;
+    --dark: #2d3748;
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-success: linear-gradient(135deg, #4cc9f0 0%, #4895ef 100%);
+    --gradient-warning: linear-gradient(135deg, #f72585 0%, #b5179e 100%);
+    --gradient-danger: linear-gradient(135deg, #e63946 0%, #f72585 100%);
+    --gradient-dark: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+}
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+/* === BASE STYLES === */
+body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #f7fafc;
+}
+
+/* === CARD STYLES === */
+.card {
+    background: white;
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+    font-weight: 600;
+    padding: 1.25rem 1.5rem;
+}
+
+/* === BUTTON STYLES === */
+.btn {
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    padding: 0.75rem 1.5rem;
+}
+
+.btn-primary {
+    background: var(--gradient-primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    color: white;
+}
+
+.btn-success {
+    background: var(--gradient-success);
+    color: white;
+}
+
+.btn-warning {
+    background: var(--gradient-warning);
+    color: white;
+}
+
+.btn-danger {
+    background: var(--gradient-danger);
+    color: white;
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* === BADGE STYLES === */
+.badge {
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+}
+
+.badge-success {
+    background: var(--gradient-success);
+}
+
+.badge-warning {
+    background: var(--gradient-warning);
+}
+
+.badge-danger {
+    background: var(--gradient-danger);
+}
+
+.badge-info {
+    background: var(--gradient-primary);
+}
+
+.badge-primary {
+    background: var(--gradient-primary);
+}
+
+/* === NAVIGATION === */
+.navbar {
+    background: var(--gradient-primary) !important;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    padding: 1rem 0;
+}
+
+.navbar .nav-link {
+    color: white !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    margin: 0 0.25rem;
+    padding: 0.5rem 1rem !important;
+}
+
+.navbar .nav-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+}
+
+/* === TABLE STYLES === */
+.table {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.table thead th {
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    padding: 1rem;
+    font-weight: 600;
+}
+
+.table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+    border-color: #e2e8f0;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(248, 250, 252, 0.5);
+}
+
+/* === FORM STYLES === */
+.form-control {
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
 }

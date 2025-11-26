@@ -9,17 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->text('description');
-            $table->enum('priority', ['Low', 'Medium', 'High']);
-            $table->enum('status', ['Open', 'In Progress', 'Closed'])->default('Open');
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('category_id')->constrained('categories');
-            $table->foreignId('assigned_to')->nullable()->constrained('users');
+            $table->enum('status', ['Open', 'In Progress', 'Resolved', 'Closed'])->default('Open');
+            $table->enum('priority', ['Low', 'Medium', 'High', 'Urgent'])->default('Medium');
+
+            // Foreign keys
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('assigned_to')->nullable()->constrained('users')->onDelete('set null'); // PASTIKAN ADA
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->foreignId('department_id')->constrained()->onDelete('cascade');
+
             $table->timestamps();
         });
     }
