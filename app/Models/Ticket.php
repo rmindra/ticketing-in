@@ -57,31 +57,31 @@ class Ticket extends Model
         return $this->hasMany(Comment::class);
     }
 
-    // METHOD BARU: Cek apakah ticket sudah resolved
+    // Cek apakah ticket sudah resolved
     public function isResolved()
     {
         return $this->status === 'Resolved';
     }
 
-    // METHOD BARU: Cek apakah konfirmasi sudah lengkap
+    // Cek apakah konfirmasi sudah lengkap
     public function isFullyConfirmed()
     {
         return $this->user_confirmed && $this->admin_confirmed;
     }
 
-    // METHOD BARU: Cek apakah user sudah konfirmasi
+    // Cek apakah user sudah konfirmasi
     public function isUserConfirmed()
     {
         return (bool) $this->user_confirmed;
     }
 
-    // METHOD BARU: Cek apakah admin sudah konfirmasi
+    // Cek apakah admin sudah konfirmasi
     public function isAdminConfirmed()
     {
         return (bool) $this->admin_confirmed;
     }
 
-    // METHOD BARU: Cek apakah ticket bisa dikonfirmasi oleh user
+    // Cek apakah ticket bisa dikonfirmasi oleh user
     public function canBeConfirmedByUser($userId)
     {
         return $this->isResolved() &&
@@ -89,7 +89,7 @@ class Ticket extends Model
             !$this->user_confirmed;
     }
 
-    // METHOD BARU: Cek apakah ticket bisa dikonfirmasi oleh admin
+    // Cek apakah ticket bisa dikonfirmasi oleh admin
     public function canBeConfirmedByAdmin($user)
     {
         return $this->isResolved() &&
@@ -98,7 +98,6 @@ class Ticket extends Model
             !$this->admin_confirmed;
     }
 
-    // METHOD BARU: Cek apakah bisa menambah komentar
     // Method untuk cek apakah bisa menambah komentar
     public function canAddComments()
     {
@@ -121,13 +120,13 @@ class Ticket extends Model
         ]);
     }
 
-    // METHOD BARU: Cek apakah ticket milik user tertentu
+    // Cek apakah ticket milik user tertentu
     public function isOwnedBy($userId)
     {
         return $this->user_id == $userId;
     }
 
-    // METHOD BARU: Cek apakah ticket bisa dilihat oleh user
+    // Cek apakah ticket bisa dilihat oleh user
     public function canBeViewedBy($user)
     {
         if ($user instanceof User) {

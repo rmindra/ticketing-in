@@ -19,7 +19,7 @@
                 <a href="{{ route('admin.departments.edit',$d) }}" class="btn btn-sm btn-warning">Edit</a>
                 <form action="{{ route('admin.departments.destroy',$d) }}" method="post" style="display:inline" onsubmit="return confirm('Delete department?')">
                     @csrf @method('DELETE')
-                    <button class="btn btn-sm btn-danger">Del</button>
+                    <button class="btn btn-sm btn-danger">Delete</button>
                 </form>
             </td>
         </tr>

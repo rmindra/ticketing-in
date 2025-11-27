@@ -17,7 +17,10 @@
             <td>{{ $r->description }}</td>
             <td>
                 <a class="btn btn-sm btn-warning" href="{{ route('admin.roles.edit',$r) }}">Edit</a>
-                <form action="{{ route('admin.roles.destroy',$r) }}" method="post" style="display:inline">@csrf @method('DELETE')<button class="btn btn-sm btn-danger">Del</button></form>
+                <form action="{{ route('admin.roles.destroy',$r) }}" method="post" style="display:inline">
+                    @csrf @method('DELETE')
+                    <button class="btn btn-sm btn-danger">Delete</button>
+                </form>
             </td>
         </tr>
     @endforeach

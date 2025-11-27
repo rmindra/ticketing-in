@@ -40,8 +40,6 @@ class User extends Authenticatable
     // Method untuk cek apakah user adalah admin
     public function isAdmin()
     {
-        // The roles table stores the role in the 'role' column (enum).
-        // Some code may expect a 'name' attribute; accept either to be safe.
         if (! $this->role) {
             return false;
         }
@@ -49,7 +47,6 @@ class User extends Authenticatable
         return ($this->role->role ?? null) === 'admin' || ($this->role->name ?? null) === 'admin';
     }
 
-    // Alternatif: cek berdasarkan role_id (jika role_id 1 = admin)
     public function isAdminAlternative()
     {
         return $this->role_id === 1;

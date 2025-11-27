@@ -21,7 +21,7 @@
                 <a href="{{ route('admin.users.edit',$u) }}" class="btn btn-sm btn-warning">Edit</a>
                 <form action="{{ route('admin.users.destroy',$u) }}" method="post" style="display:inline" onsubmit="return confirm('Delete user?')">
                     @csrf @method('DELETE')
-                    <button class="btn btn-sm btn-danger">Del</button>
+                    <button class="btn btn-sm btn-danger">Delete</button>
                 </form>
             </td>
         </tr>
