@@ -67,7 +67,6 @@ Route::prefix('admin')
         // Admin Dashboard
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-        // ✅ Route untuk claim ticket - PASTIKAN ADA
         Route::post('tickets/{ticket}/claim', [AdminTicketController::class, 'claim'])
             ->name('tickets.claim');
 
@@ -77,7 +76,7 @@ Route::prefix('admin')
         // Admin Ticket Management
         Route::resource('tickets', AdminTicketController::class)->except(['show', 'create', 'store']);
 
-        // Route assign (jika masih butuh)
+        // Route assign
         Route::post('tickets/{ticket}/assign', [AdminTicketController::class, 'assign'])
             ->name('tickets.assign');
 
